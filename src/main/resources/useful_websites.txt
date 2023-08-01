@@ -1,0 +1,20 @@
+https://reflectoring.io/spring-boot-exception-handling/
+https://stackabuse.com/how-to-return-http-status-codes-in-a-spring-boot-application/
+https://www.toptal.com/java/spring-boot-rest-api-error-handling
+
+https://www.baeldung.com/maven-java-version
+
+https://stackoverflow.com/questions/2864796/easymock-vs-mockito-design-vs-maintainability
+
+For my style here, seems like should use constructor injection for class that are required dependencies,
+using @Value annotation for things that may not be required, or are simple properties
+
+Store enums in database (Section 4):
+https://www.baeldung.com/jpa-persisting-enums-in-jpa
+
+Enum controller string conversion:
+https://stackoverflow.com/questions/33637427/spring-requestbody-and-enum-value
+https://www.baeldung.com/spring-enum-request-param
+
+https://softwareengineering.stackexchange.com/questions/306890/is-it-bad-practice-that-a-controller-calls-a-repository-instead-of-a-service
+https://stackoverflow.com/questions/48216742/what-is-the-correct-prefer-way-of-operating-repo-service-controller-in-spring
