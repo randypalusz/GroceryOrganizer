@@ -16,6 +16,10 @@
 	<properties>
     <!-- below is a spring boot specification -->
 		<java.version>17</java.version>
+		<!-- docker -->
+		<docker.buildArg.buildDirectory>${project.build.directory}</docker.buildArg.buildDirectory>
+		<docker.buildArg.name>${project.name}</docker.buildArg.name>
+		<docker.buildArg.version>${project.version}</docker.buildArg.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -87,7 +91,79 @@
 					</execution>
 				</executions>
 			</plugin>
+<!--		Consider moving to this:
+https://github.com/spotify/dockerfile-maven	-->
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.43.2</version>
+				<configuration>
+					<images>
+						<image>
+							<alias>service</alias>
+							<name>randypalusz/grocery-organizer</name>
+							<build>
+								<contextDir>${project.basedir}</contextDir>
+								<dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+							</build>
+<!--							<alias>service</alias>-->
+<!--							<name>randypalusz/grocery-organizer:${project.version}</name>-->
+<!--							<build>-->
+<!--								<from>eclipse-temurin:18</from>-->
+<!--								<cmd>-->
+<!--									<shell>java -jar maven/GroceryOrganizer.jar</shell>-->
+<!--								</cmd>-->
+<!--&lt;!&ndash;							https://dmp.fabric8.io/#build-assembly-descriptor	&ndash;&gt;-->
+<!--								<assembly>-->
+<!--									<mode>dir</mode>-->
+<!--									<descriptorRef>artifact</descriptorRef>-->
+<!--								</assembly>-->
+<!--&lt;!&ndash;								<runCmds>&ndash;&gt;-->
+<!--&lt;!&ndash;									&ndash;&gt;-->
+<!--&lt;!&ndash;								</runCmds>&ndash;&gt;-->
+<!--							</build>-->
+
+<!--							<run>-->
+<!--								<ports>-->
+<!--									<port>tomcat.port:8080</port>-->
+<!--								</ports>-->
+<!--&lt;!&ndash;								<wait>&ndash;&gt;-->
+<!--&lt;!&ndash;									<http>&ndash;&gt;-->
+<!--&lt;!&ndash;										<url>http://localhost:${tomcat.port}/access</url>&ndash;&gt;-->
+<!--&lt;!&ndash;									</http>&ndash;&gt;-->
+<!--&lt;!&ndash;									<time>10000</time>&ndash;&gt;-->
+<!--&lt;!&ndash;								</wait>&ndash;&gt;-->
+<!--&lt;!&ndash;								<links>&ndash;&gt;-->
+<!--&lt;!&ndash;									<link>database:db</link>&ndash;&gt;-->
+<!--&lt;!&ndash;								</links>&ndash;&gt;-->
+<!--							</run>-->
+
+						</image>
+					</images>
+				</configuration>
+				<!-- Connect start/stop to pre- and
+     post-integration-test phase, respectively if you want to start
+     your docker containers during integration tests -->
+				<executions>
+					<execution>
+						<id>start</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<!-- "build" should be used to create the images with the
+                                 artifact -->
+							<goal>build</goal>
+							<goal>start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
