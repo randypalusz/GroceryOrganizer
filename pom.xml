@@ -14,7 +14,6 @@
 	<packaging>pom</packaging>
 	<description>Demo project for Spring Boot</description>
 	<modules>
-		<module>docker-base</module>
 		<module>app-main</module>
 	</modules>
 	<properties>

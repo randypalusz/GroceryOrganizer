@@ -1,11 +1,45 @@
-run using the following after build:
+## Prerequisites
 
-    docker run -p 8080:8080 randypalusz/grocery-organizer:latest
+- Docker/Docker compose
+- JDK 18
+- Maven (not using the wrapper here, is a TODO to ensure this works)
+ 
+## Docker Setup
 
-This will map the host's port 8080 (first part) to the docker container's port 8080
+Create docker volumes:
 
-- Naturally, the user may choose the host port to which the API will be mapped
+    docker volume create mysql_data
+
+    docker volume create mysql_config
+
+Create docker network for db/app communication:
+
+    docker network create mysqlnet
+
+## Build + Run
+
+Build using maven:
+
+    mvn clean install -DskipTests
+
+Run using docker-compose from the root dir:
+
+    docker compose -f app-main/docker-compose.dev.yml up
+
+This will map the host's port 8081 (first part) to the docker container's port 8080
+
+- Naturally, the user may choose the host port to which the API will be mapped in the docker-compose ports section
 
 The API can be accessed by using the following address in the default configuration:
 
-    http://localhost:8080/<path>
+    http://localhost:8081/<path>
+
+## TODO:
+
+- Integration Tests
+  - use maven-exec-plugin to trigger docker-compose in the pre-integration-test phase
+  - may want a separate docker-compose file to not have persistent storage through docker volumes
+    - alternatively, could use testcontainers
+- Unit Tests
+  - Separate profiles through the application-${PROFILE_NAME}.properties
+    - (e.g. would want to use H2 for local testing)
