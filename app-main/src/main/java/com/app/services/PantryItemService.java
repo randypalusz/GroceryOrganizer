@@ -11,6 +11,8 @@ public interface PantryItemService {
 
     ServiceResponse<PantryItem> addItem(PantryItem item);
 
+    ServiceResponse<PantryItem> updateItem(PantryItem item);
+
     List<PantryItem> getAllItems();
 
     ServiceResponse<List<PantryItem>> getAllItemsWithLocation(Location location);

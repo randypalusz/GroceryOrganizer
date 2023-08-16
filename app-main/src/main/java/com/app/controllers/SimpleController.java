@@ -86,4 +86,14 @@ public class SimpleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response.val);
     }
 
+    //TODO: test
+    @PutMapping(value = "/item", consumes = {"application/json"})
+    public ResponseEntity<Object> updateQuantity(@RequestBody PantryItem pantryItem) {
+        ServiceResponse<PantryItem> response = pantryItemService.updateItem(pantryItem);
+        if (response.status != Status.SUCCESS) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError(response.errorMessage, HttpStatus.BAD_REQUEST));
+        }
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.val);
+    }
+
 }
