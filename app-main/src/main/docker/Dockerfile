@@ -5,7 +5,15 @@ LABEL authors="randy"
 # need to do this so that the mysql service is running automatically when the container starts
 #ENTRYPOINT service mysql start && java -jar /maven/${name}.jar
 
-COPY target/GroceryOrganizer-*.*.*.jar /maven/GroceryOrganizer.jar
+ARG APP_NAME=GroceryOrganizer
+ARG APP_PATH=/maven/${APP_NAME}
+ENV JAVA_APP_JAR=${APP_PATH}.jar
+
+COPY target/${APP_NAME}-*.*.*.jar ${APP_PATH}.jar
+COPY target/classes/application.properties /maven/application.properties
+COPY target/docker-extra/run-java/run-java.sh /
+
+RUN chmod +x /run-java.sh
 
 # Configure db
 # TODO: don't hardcode the password...
@@ -15,6 +23,7 @@ COPY target/GroceryOrganizer-*.*.*.jar /maven/GroceryOrganizer.jar
 #    && service mysql restart
 # end configure db
 
-ENTRYPOINT java -jar /maven/GroceryOrganizer.jar
+#ENTRYPOINT java -jar /maven/GroceryOrganizer.jar --spring.config.location=file:/maven/application.properties
+ENTRYPOINT /bin/sh -c ./run-java.sh run --spring-config.location=file:/maven/application.properties
 
 EXPOSE 8080
