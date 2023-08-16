@@ -43,3 +43,18 @@ The API can be accessed by using the following address in the default configurat
 - Unit Tests
   - Separate profiles through the application-${PROFILE_NAME}.properties
     - (e.g. would want to use H2 for local testing)
+
+
+## Notes:
+
+If running locally, may need to start mysql-server. On first run, you may need to create the `test_user` db user and start the mysql service
+
+On Mac with mysql installed using brew, setup may look like this:
+
+    brew services mysql start
+
+    mysql --user=root --execute="CREATE USER 'test_user'@'localhost' IDENTIFIED BY 'test1234'"
+
+    mysql --user=root --execute="GRANT ALL PRIVILEGES ON *.* TO 'test_user'@'localhost' WITH GRANT OPTION"
+
+    mysql --user=root --execute="FLUSH PRIVILEGES"
