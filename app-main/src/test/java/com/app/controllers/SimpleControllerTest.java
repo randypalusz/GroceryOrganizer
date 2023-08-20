@@ -105,4 +105,45 @@ public class SimpleControllerTest {
         assertEquals(new ApiError(Status.DUPLICATE_EXISTS.getMessage(), HttpStatus.BAD_REQUEST), response.getBody());
     }
 
+    @Test
+    public void updateItemValidTest() {
+        final String NAME = "duplicate_item";
+        final Location LOCATION = Location.REFRIGERATOR;
+        PantryItem item1 = new PantryItem();
+        item1.setName(NAME);
+        item1.setQuantity(3);
+        item1.setLocation(LOCATION);
+
+        PantryItem item2 = new PantryItem();
+        item2.setName(NAME);
+        item2.setQuantity(1);
+        item2.setLocation(LOCATION);
+
+        // Mock the behavior
+        Mockito.when(repository.findByName(NAME)).thenReturn(new ArrayList<>());
+        Mockito.when(repository.findFirstByNameAndLocation(NAME, LOCATION)).thenReturn(item1);
+        Mockito.when(repository.save(Mockito.isA(PantryItem.class))).then(returnsFirstArg());
+
+        controller.addItem(item1);
+        ResponseEntity<Object> response = controller.updateQuantity(item2);
+        PantryItem returnedItem = (PantryItem) response.getBody();
+
+        assertNotNull(returnedItem);
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        assertEquals(4, returnedItem.getQuantity());
+    }
+
+    @Test
+    public void updateItemWhenItemDoesNotExist() {
+        final String NAME = "duplicate_item";
+        final Location LOCATION = Location.REFRIGERATOR;
+        PantryItem item = new PantryItem();
+        item.setName(NAME);
+        item.setQuantity(3);
+        item.setLocation(LOCATION);
+
+
+
+    }
+
 }
