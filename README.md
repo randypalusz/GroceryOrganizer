@@ -43,6 +43,9 @@ The API can be accessed by using the following address in the default configurat
 - Unit Tests
   - Separate profiles through the application-${PROFILE_NAME}.properties
     - (e.g. would want to use H2 for local testing)
+- Separate Dockerfiles for dev/prod
+  - Use maven profiles for toggling this, maybe set variable based on profile that sets name of dockerfile
+  - Want to enable remote debugging on dev, not prod
 
 
 ## Notes:
