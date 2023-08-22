@@ -19,10 +19,6 @@
 	<properties>
     <!-- below is a spring boot specification -->
 		<java.version>17</java.version>
-		<!-- docker -->
-		<docker.buildArg.buildDirectory>${project.build.directory}</docker.buildArg.buildDirectory>
-		<docker.buildArg.name>${project.name}</docker.buildArg.name>
-		<docker.buildArg.version>${project.version}</docker.buildArg.version>
 	</properties>
 	<build>
 		<plugins>

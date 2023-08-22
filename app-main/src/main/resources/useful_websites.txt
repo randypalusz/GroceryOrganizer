@@ -18,3 +18,5 @@ https://www.baeldung.com/spring-enum-request-param
 
 https://softwareengineering.stackexchange.com/questions/306890/is-it-bad-practice-that-a-controller-calls-a-repository-instead-of-a-service
 https://stackoverflow.com/questions/48216742/what-is-the-correct-prefer-way-of-operating-repo-service-controller-in-spring
+
+https://www.thymeleaf.org/doc/articles/layouts.html

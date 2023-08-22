@@ -1,11 +1,24 @@
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Home Page</title>
 </head>
 <body>
 <h1>Hello!</h1>
 <p>Welcome to <span th:text="${appName}">Our App</span></p>
+<button th:data-name="${items}" th:onclick="alert(this.getAttribute('data-name'))">Display items in alert</button>
 <p>Items: <span th:text="${items}">Items</span></p>
 <p>Label for randomGeneratorService: <span th:text="${label}">The Label</span></p>
 </body>
+
+<!--<script  th:inline="javascript">-->
+<!--    function greetWorld() {-->
+<!--        alert("hello world")-->
+<!--    }-->
+
+<!--    function salute(name) {-->
+<!--        alert("hello: " + name)-->
+<!--    }-->
+<!--</script>-->
+
 </html>

@@ -5,7 +5,7 @@ LABEL authors="randy"
 # need to do this so that the mysql service is running automatically when the container starts
 #ENTRYPOINT service mysql start && java -jar /maven/${name}.jar
 
-ARG APP_NAME=GroceryOrganizer
+ARG APP_NAME=${name}
 ARG APP_PATH=/maven/${APP_NAME}
 ENV JAVA_APP_JAR=${APP_PATH}.jar
 
