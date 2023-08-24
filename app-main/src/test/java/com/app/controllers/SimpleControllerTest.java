@@ -142,8 +142,12 @@ public class SimpleControllerTest {
         item.setQuantity(3);
         item.setLocation(LOCATION);
 
+        Mockito.when(repository.findFirstByNameAndLocation(Mockito.isA(String.class), Mockito.isA(Location.class))).thenReturn(null);
 
+        ResponseEntity<Object> response = controller.updateQuantity(item);
 
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(new ApiError(Status.NO_ITEM_EXISTS.getMessage(), HttpStatus.BAD_REQUEST), response.getBody());
     }
 
 }

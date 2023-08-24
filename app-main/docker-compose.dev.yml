@@ -2,6 +2,7 @@ version: '3.8'
 services:
   grocery-organizer:
     image: randypalusz/grocery-organizer
+    init: true
     ports:
       - "8000:8000"
       - "8081:8080"
