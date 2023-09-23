@@ -1,0 +1,16 @@
+#!/bin/bash
+
+COMPOSE_CMD=$1
+RUN_CMD=""
+
+# add (if $1==up, then add --detach flag to cmd)
+if [ "$COMPOSE_CMD" == "up" ]; then
+  RUN_CMD="up --detach"
+elif [ "$COMPOSE_CMD" == "down" ]; then
+  RUN_CMD="down"
+fi
+
+pwd
+echo ${RUN_CMD}
+# shellcheck disable=SC2027
+docker compose -f docker-compose.dev.yml ${RUN_CMD}
