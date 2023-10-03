@@ -6,10 +6,11 @@ LABEL authors="randy"
 #ENTRYPOINT service mysql start && java -jar /maven/${name}.jar
 
 ARG APP_NAME=${name}
+#ARG PATH_TO_LOCAL_TARGET_DIR=${target_dir_path}
 ARG APP_PATH=/maven/${APP_NAME}
 ENV JAVA_APP_JAR=${APP_PATH}.jar
 
-COPY target/${APP_NAME}-*.*.*.jar ${APP_PATH}.jar
+COPY target/${APP_NAME}-*.*.*-SNAPSHOT.jar ${APP_PATH}.jar
 COPY target/classes/application.properties /maven/application.properties
 COPY target/docker-extra/run-java/run-java.sh /
 

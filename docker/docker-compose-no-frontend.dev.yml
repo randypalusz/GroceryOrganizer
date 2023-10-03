@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  grocery-organizer:
+    image: randypalusz/grocery-organizer-backend
+    init: true
+    ports:
+      - "8000:8000"
+      - "8081:8080"
+    networks:
+      - grocery_organizer_mysqlnet
+    environment:
+      - SERVER_PORT=8080
+      - MYSQL_URL=jdbc:mysql://mysqlserver:3306/test?createDatabaseIfNotExist=true
+    #    volumes:
+    #      - ./:/maven
+    depends_on:
+      mysqlserver:
+        condition: service_healthy
+
+  mysqlserver:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    networks:
+      - grocery_organizer_mysqlnet
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_USER=test_user
+      - MYSQL_PASSWORD=test1234
+      - MYSQL_DATABASE=test
+    volumes:
+      - grocery_organizer_mysql_data:/var/lib/mysql
+      - grocery_organizer_mysql_config:/etc/mysql/conf.d
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 2s
+      timeout: 20s
+      retries: 10
+volumes:
+  grocery_organizer_mysql_data:
+    external: false
+  grocery_organizer_mysql_config:
+    external: false
+networks:
+  grocery_organizer_mysqlnet:
+    external: false

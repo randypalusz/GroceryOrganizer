@@ -14,7 +14,7 @@
 	<packaging>pom</packaging>
 	<description>Demo project for Spring Boot</description>
 	<modules>
-		<module>app-main</module>
+		<module>grocery-organizer-backend</module>
 	</modules>
 	<properties>
     <!-- below is a spring boot specification -->

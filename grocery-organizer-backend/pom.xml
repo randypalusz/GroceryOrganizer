@@ -6,14 +6,106 @@
         <artifactId>grocery-organizer-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>GroceryOrganizer</artifactId>
-    <name>GroceryOrganizer</name>
+    <artifactId>grocery-organizer-backend</artifactId>
+    <name>grocery-organizer-backend</name>
     <properties>
         <!-- docker -->
         <docker.buildArg.buildDirectory>${project.build.directory}</docker.buildArg.buildDirectory>
         <docker.buildArg.name>${project.name}</docker.buildArg.name>
         <docker.buildArg.version>${project.version}</docker.buildArg.version>
     </properties>
+    <profiles>
+        <profile>
+            <id>dockerBuild</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <!--                    This needs to go before the docker-compose stuff... -->
+                    <!--                    When two executions are tied to the same phase, the-->
+                    <!--                    the order in which they're run is determined by the order-->
+                    <!--                    listed in the pom.xml-->
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.43.2</version>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <alias>service</alias>
+                                    <name>randypalusz/grocery-organizer-backend</name>
+                                    <build>
+                                        <contextDir>${project.basedir}</contextDir>
+                                        <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+                                    </build>
+                                </image>
+                            </images>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>io.fabric8</groupId>
+                                <artifactId>run-java-sh</artifactId>
+                                <version>1.3.8</version>
+                            </dependency>
+                        </dependencies>
+                        <!-- Connect start/stop to pre- and
+             post-integration-test phase, respectively if you want to start
+             your docker containers during integration tests -->
+                        <executions>
+                            <execution>
+                                <id>start</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <!-- "build" should be used to create the images with the
+                                         artifact -->
+                                    <goal>build</goal>
+                                    <!--                                    <goal>start</goal>-->
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>start</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>bash</executable>
+                                    <workingDirectory>${session.executionRootDirectory}/docker/</workingDirectory>
+                                    <arguments>
+                                        <argument>run-docker-compose</argument>
+                                        <argument>up</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>bash</executable>
+                                    <workingDirectory>${session.executionRootDirectory}/docker/</workingDirectory>
+                                    <arguments>
+                                        <argument>run-docker-compose</argument>
+                                        <argument>down</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -67,96 +159,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <profiles>
-        <profile>
-            <id>dockerBuild</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-<!--                    This needs to go before the docker-compose stuff... -->
-<!--                    When two executions are tied to the same phase, the-->
-<!--                    the order in which they're run is determined by the order-->
-<!--                    listed in the pom.xml-->
-                    <plugin>
-                        <groupId>io.fabric8</groupId>
-                        <artifactId>docker-maven-plugin</artifactId>
-                        <version>0.43.2</version>
-                        <configuration>
-                            <images>
-                                <image>
-                                    <alias>service</alias>
-                                    <name>randypalusz/grocery-organizer</name>
-                                    <build>
-                                        <contextDir>${project.basedir}</contextDir>
-                                        <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
-                                    </build>
-                                </image>
-                            </images>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>io.fabric8</groupId>
-                                <artifactId>run-java-sh</artifactId>
-                                <version>1.3.8</version>
-                            </dependency>
-                        </dependencies>
-                        <!-- Connect start/stop to pre- and
-             post-integration-test phase, respectively if you want to start
-             your docker containers during integration tests -->
-                        <executions>
-                            <execution>
-                                <id>start</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <!-- "build" should be used to create the images with the
-                                         artifact -->
-                                    <goal>build</goal>
-                                    <!--                                    <goal>start</goal>-->
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.1.0</version>
-                        <executions>
-                            <execution>
-                                <id>start</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>bash</executable>
-                                    <arguments>
-                                        <argument>${project.basedir}/run-docker-compose</argument>
-                                        <argument>up</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>stop</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>bash</executable>
-                                    <arguments>
-                                        <argument>${project.basedir}/run-docker-compose</argument>
-                                        <argument>down</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
     <build>
         <resources>
             <resource>

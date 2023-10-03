@@ -1,6 +1,7 @@
 #!/bin/bash
 
 COMPOSE_CMD=$1
+
 RUN_CMD=""
 
 # add (if $1==up, then add --detach flag to cmd)
