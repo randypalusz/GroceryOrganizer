@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  grocery-organizer:
+  backend:
     image: randypalusz/grocery-organizer-backend
     init: true
     ports:

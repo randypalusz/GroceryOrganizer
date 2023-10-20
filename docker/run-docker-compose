@@ -4,6 +4,7 @@ COMPOSE_CMD=$1
 
 RUN_CMD=""
 
+# TODO: add args to choose which docker-compose file to use (dev/frontend/no frontend)
 # add (if $1==up, then add --detach flag to cmd)
 if [ "$COMPOSE_CMD" == "up" ]; then
   RUN_CMD="up --detach"
@@ -14,4 +15,4 @@ fi
 pwd
 echo ${RUN_CMD}
 # shellcheck disable=SC2027
-docker compose -f docker-compose.dev.yml ${RUN_CMD}
+docker compose -f docker-compose-no-frontend.dev.yml -p grocery-organizer ${RUN_CMD}

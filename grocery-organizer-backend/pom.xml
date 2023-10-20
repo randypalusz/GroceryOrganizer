@@ -40,6 +40,14 @@
                                         <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
                                     </build>
                                 </image>
+<!--                                TODO: make a pom file in the react-frontend directory and move this stuff there-->
+                                <image>
+                                    <name>randypalusz/grocery-organizer-frontend</name>
+                                    <build>
+                                        <contextDir>${maven.multiModuleProjectDirectory}/react-frontend</contextDir>
+                                        <dockerFile>${maven.multiModuleProjectDirectory}/react-frontend/Dockerfile</dockerFile>
+                                    </build>
+                                </image>
                             </images>
                         </configuration>
                         <dependencies>
