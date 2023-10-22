@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>grocery-organizer-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>grocery-organizer-frontend</artifactId>
+    <name>grocery-organizer-frontend</name>
+    <properties>
+        <!-- docker -->
+        <docker.buildArg.buildDirectory>${project.build.directory}</docker.buildArg.buildDirectory>
+        <docker.buildArg.name>${project.name}</docker.buildArg.name>
+        <docker.buildArg.version>${project.version}</docker.buildArg.version>
+    </properties>
+    <profiles>
+        <profile>
+            <id>dockerBuild</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-install-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-install</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-jar</id>
+                                <phase>none</phase>
+                                <configuration>
+                                    <finalName>unwanted</finalName>
+                                    <classifier>unwanted</classifier>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!--                    This needs to go before the docker-compose stuff... -->
+                    <!--                    When two executions are tied to the same phase, the-->
+                    <!--                    the order in which they're run is determined by the order-->
+                    <!--                    listed in the pom.xml-->
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.43.2</version>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <name>randypalusz/grocery-organizer-frontend</name>
+                                    <build>
+                                        <!--suppress UnresolvedMavenProperty -->
+                                        <contextDir>${project.basedir}</contextDir>
+                                        <!--suppress UnresolvedMavenProperty -->
+                                        <dockerFile>${project.basedir}/Dockerfile</dockerFile>
+                                    </build>
+                                </image>
+                            </images>
+                        </configuration>
+                        <!-- Connect start/stop to pre- and
+             post-integration-test phase, respectively if you want to start
+             your docker containers during integration tests -->
+                        <executions>
+                            <execution>
+                                <id>start</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <!-- "build" should be used to create the images with the
+                                         artifact -->
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <build>
+    </build>
+</project>
