@@ -4,6 +4,7 @@
 version: '3.8'
 services:
   backend:
+    container_name: backend
     image: randypalusz/grocery-organizer-backend
     init: true
     ports:
@@ -23,6 +24,7 @@ services:
 
   mysqlserver:
     image: mysql:8.0
+    container_name: mysqlserver
     ports:
       - "3306:3306"
     networks:
@@ -44,6 +46,7 @@ services:
 
   frontend:
     image: randypalusz/grocery-organizer-frontend
+    container_name: frontend
     build:
       context: .
       target: development
