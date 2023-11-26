@@ -1,6 +1,22 @@
 #!/bin/bash
 
 COMPOSE_CMD=$1
+shift
+DOCKER_COMPOSE_FILE="docker-compose-no-frontend.dev.yml"
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -f|--frontend)
+      DOCKER_COMPOSE_FILE="docker-compose.dev.yml"
+      echo "using frontend"
+      shift # past argument
+      ;;
+    *)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+  esac
+done
 
 RUN_CMD=""
 
@@ -15,4 +31,4 @@ fi
 pwd
 echo ${RUN_CMD}
 # shellcheck disable=SC2027
-docker compose -f docker-compose-no-frontend.dev.yml -p grocery-organizer ${RUN_CMD}
+docker compose -f ${DOCKER_COMPOSE_FILE} -p grocery-organizer ${RUN_CMD}

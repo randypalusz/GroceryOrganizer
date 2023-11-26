@@ -4,40 +4,40 @@
 - JDK 18
 - Maven (not using the wrapper here, is a TODO to ensure this works)
  
-## Docker Setup
-
-Create docker volumes:
-
-    docker volume create mysql_data
-
-    docker volume create mysql_config
-
-Create docker network for db/app communication:
-
-    docker network create mysqlnet
-
 ## Build + Run
 
 Build using maven:
 
-    mvn clean install -DskipTests
+    mvn clean install -DskipTests -PdockerBuild
 
-Run using docker-compose from the root dir:
+Run using the docker-compose script inside docker dir:
 
-    docker compose -f app-main/docker-compose.dev.yml up
+    cd docker
+    ./run-docker-compose up --frontend
 
-This will map the host's port 8081 (first part) to the docker container's port 8080
+This will map the host's port 8081 (first part) to the docker container's port 8080 (TODO: deprecate this accessibility)
 
-- Naturally, the user may choose the host port to which the API will be mapped in the docker-compose ports section
+Also will expose the frontend to the client on port 3000
 
 The API can be accessed by using the following address in the default configuration:
 
     http://localhost:8081/<path>
 
+Website can be accessed at the following:
+
+    http://localhost:3000
+
+## Shutdown:
+
+Use the included `run-docker-compose`script to shutdown the app:
+
+    cd docker
+    ./run-docker-compose down --frontend
+
 ## TODO:
 
 - Integration Tests
-  - use maven-exec-plugin to trigger docker-compose in the pre-integration-test phase
+  - [x] use maven-exec-plugin to trigger docker-compose in the pre-integration-test phase
   - may want a separate docker-compose file to not have persistent storage through docker volumes
     - alternatively, could use testcontainers
 - Unit Tests
@@ -46,6 +46,7 @@ The API can be accessed by using the following address in the default configurat
 - Separate Dockerfiles for dev/prod
   - Use maven profiles for toggling this, maybe set variable based on profile that sets name of dockerfile
   - Want to enable remote debugging on dev, not prod
+- Beef-up the frontend (obviously)
 
 
 ## Notes:

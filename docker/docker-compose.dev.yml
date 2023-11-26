@@ -1,6 +1,4 @@
-# TODO: customize this to use the react frontend, e.g. use one network between the frontend/backend and one for backend/server
 # TODO: keep backend exposed to host for integration testing
-# TODO: ensure a volume exists for the new frontend service to enable on-the-fly updates
 version: '3.8'
 services:
   backend:
